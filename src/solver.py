@@ -1,6 +1,6 @@
 # File: solver.py
-# Program untuk menyelesaikan permainan 15-Puzzle Game
-# Menggunakan algoritma branch and bound
+# Fungsi:
+# - menyelesaikan permainan 15-Puzzle Game menggunakan algoritma branch and 
 
 # Import matrix.py
 from matrix import *
@@ -11,29 +11,32 @@ import copy
 # Import heap queue
 from heapq import *
 
-# Fungsi untuk menghitung total KURANG() sebagai cost(Root)
-def totalKurang(matrix):
-    # Menjumlahkan seluruh KURANG() untuk setiap ubin
+# Import time
+import time
 
+# Fungsi totalKurang()
+# Fungsi: menghitung total KURANG() sebagai cost(Root)
+def totalKurang(matrix):
     # Inisialisasi sum = 0
     sum = 0
 
-    print("Nilai fungsi Kurang(i):")
-    print("ELMT(i)\tKURANG(i)")
+    print("\nNilai fungsi Kurang(i):")
+    print("|===============================|")
+    print("|ELMT(i)\t| KURANG(i)\t|")
+    print("|===============|===============|")
 
     for i in range (matrix.rowSize):
         for j in range (matrix.colSize):
             kurangElmt = kurang(matrix,i,j) 
-            print(str(matrix.getElmt(i,j)) + ":\t" + str(kurangElmt))
+            print("|" + str(matrix.getElmt(i,j)) + "\t\t|" + str(kurangElmt) + "\t\t|")
             sum += kurangElmt
+    
+    print("|===============================|")
     return sum
 
-# Fungsi untuk menghitung KURANG()
+# Fungsi kurang()
+# Fungsi: Menghitung KURANG()
 def kurang(matrix, i, j):
-    # Definisi KURANG():
-    # banyaknya ubin bernomor j sedemikian sehingga j < i
-    # dan POSISI(j) > POSISI(i)
-
     # Inisialisasi count = 0
     count = 0
 
@@ -85,31 +88,31 @@ def printPath(matrix):
     if (matrix.getPreviousMatrix() != None):
         printPath(matrix.getPreviousMatrix())
     matrix.printMatrix()
-    print()
 
 # ALGORITMA UTAMA SOLVER BRANCH AND BOUND
 def solve(matrix):
-    # PEMERIKSAAN APAKAH MATRIX DAPAT DISOLVE
-
-    # Luaran 2:
-    print()
+    # Pemeriksaan apakah persoalan dapat diselesaikan atau tidak
+    # Spek Luaran #2: Cetak nilai fungsi Kurang(i)
     costRoot = totalKurang(matrix) + statusX(matrix)
     
-    # Luaran 3:
-    print()
-    print("Nilai dari TOTALKURANG(i) + X: " + str(costRoot))
+    # Spek Luaran #3: Cetak nilai sum of KURANG(i) + X
+    print("\nNilai dari TOTALKURANG(i) + X: " + str(costRoot) + "\n")
     matrix.setCost(costRoot)
 
-    # Luaran 4:
-    print()
+    # Spek Luaran #4: Jika persoalan tidak dapat diselesaikan, keluar pesan
     if (costRoot % 2 == 1):
-        print("Status tujuan permainan tidak dapat dicapai.")
-        return 0
+        # Stop time
+        stopTime = time.time()
+
+        print("Status tujuan permainan tidak dapat dicapai.\n")
+
+        return 1, stopTime
     
     # Pembuatan heap sebagai priority queue (antrian)
     print("Memproses persoalan...")
+    print("Persoalan yang kompleks terkadang membutuhkan waktu yang cukup lama...")
     priorityQueue = []
-
+    
     # Masukkan matriks (simpul) akar ke dalam antrian
     heappush(priorityQueue, matrix)
 
@@ -122,17 +125,17 @@ def solve(matrix):
         
         # Ambil simpul dengan cost terendah
         minMatrix = heappop(priorityQueue)
-        # print("Yang dipilih: ")
-        # print("Prev. Move: {}".format(minMatrix.getPreviousMove()))
-        # minMatrix.printMatrix()
-        # print()
 
         # Pemeriksaan solusi, jika ditemukan, stop
         if (isSolution(minMatrix)):
-            # Luaran 5:
-            print("Proses Pencarian")
+            # Stop time
+            stopTime = time.time()
+
+            # Spek Luaran #5: Menampilkan urutan matriks dari awal ke akhir
+            print("\nUrutan Matrix dari Posisi Awal ke Goal State:\n")
             printPath(minMatrix)
-            return nodeCount
+            
+            return nodeCount, stopTime
         
         # Jika belum ditemukan, bangkitkan semua anak-anaknya
         else:
@@ -142,60 +145,60 @@ def solve(matrix):
 
             # Geser empty space ke atas
             if ((emptyX != 0) and (minMatrix.getPreviousMove() != "D")):
+                # Expand matriks
                 matrixExpandAtas = copy.deepcopy(minMatrix)
                 matrixExpandAtas.atas()
                 matrixExpandAtas.setPreviousMatrix(minMatrix)
-
+                
+                # Perhitungan cost
                 costAtas = cost(matrixExpandAtas)
                 matrixExpandAtas.setCost(costAtas)
-                # matrixExpandAtas.printMatrix()
-                # print()
+
+                # Masukkan ke dalam antrian
                 heappush(priorityQueue, matrixExpandAtas)
-                # print(nodeCount)
-                # print("U")
                 nodeCount += 1
 
             # Geser empty space ke kanan
             if ((emptyY != 3) and (minMatrix.getPreviousMove() != "L")):
+                # Expand matriks
                 matrixExpandKanan = copy.deepcopy(minMatrix)
                 matrixExpandKanan.kanan()
                 matrixExpandKanan.setPreviousMatrix(minMatrix)
                 
+                # Perhitungan cost
                 costKanan = cost(matrixExpandKanan)
                 matrixExpandKanan.setCost(costKanan)
-                # matrixExpandKanan.printMatrix()
-                # print()
+                
+                # Masukkan ke dalam antrian
                 heappush(priorityQueue, matrixExpandKanan)
-                # print(nodeCount)
-                # print("R")
                 nodeCount += 1
 
             # Geser empty space ke bawah
             if ((emptyX != 3) and (minMatrix.getPreviousMove() != "U")):
+                # Expand matriks
                 matrixExpandBawah = copy.deepcopy(minMatrix)
                 matrixExpandBawah.bawah()
                 matrixExpandBawah.setPreviousMatrix(minMatrix)
                 
+                # Perhitungan cost
                 costBawah = cost(matrixExpandBawah)
                 matrixExpandBawah.setCost(costBawah)
-                # matrixExpandBawah.printMatrix()
-                # print()
+                
+                # Masukkan ke dalam antrian
                 heappush(priorityQueue, matrixExpandBawah)
-                # print(nodeCount)
-                # print("D")
                 nodeCount += 1
             
             # Geser empty space ke kiri
             if ((emptyY != 0) and (minMatrix.getPreviousMove() != "R")):
+                # Expand matriks
                 matrixExpandKiri = copy.deepcopy(minMatrix)
                 matrixExpandKiri.kiri()
                 matrixExpandKiri.setPreviousMatrix(minMatrix)
                 
+                # Perhitungan cost
                 costKiri = cost(matrixExpandKiri)
                 matrixExpandKiri.setCost(costKiri)
-                # matrixExpandKiri.printMatrix()
-                # print()
+                
+                # Masukkan ke dalam antrian
                 heappush(priorityQueue, matrixExpandKiri)
-                # print(nodeCount)
-                # print("L")
                 nodeCount += 1

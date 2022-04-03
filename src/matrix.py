@@ -1,3 +1,5 @@
+# File: matrix.py
+
 # CLASS MATRIX
 class Matrix:
     # ***** ATRIBUT ***** #
@@ -170,4 +172,4 @@ class Matrix:
                 else:
                     print(elmt, end='\t')
             print("|")
-        print("|=======================================|")
+        print("|=======================================|\n")
