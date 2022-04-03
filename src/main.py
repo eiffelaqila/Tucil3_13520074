@@ -115,15 +115,33 @@ if __name__ == "__main__":
     print("3. Menggunakan file baru")
     method = int(input("Masukkan pilihan file input method (1-2): "))
 
-    print()
+    while (method < 1 or method > 3):
+        print("\nMasukan tidak sesuai!")
+        print("Pilihan input method: ")
+        print("1. Menggunakan test case yang tersedia")
+        print("2. Menggunakan matrix yang dibuat secara acak")
+        print("3. Menggunakan file baru")
+        method = int(input("Masukkan pilihan file input method (1-2): "))
+
     if (method == 1):
-        print("Test case yang tersedia: ")
+        print("\nTest case yang tersedia: ")
         print("1. testSolvable1.txt")
         print("2. testSolvable2.txt")
         print("3. testSolvable3.txt")
         print("4. testUnsolvable1.txt")
         print("5. testUnsolvable2.txt")
         testInput = int(input("Masukkan pilihan file (1-5): "))
+
+        while (testInput < 1 or testInput > 5):
+            print("\nMasukan tidak sesuai!")
+            print("Test case yang tersedia: ")
+            print("1. testSolvable1.txt")
+            print("2. testSolvable2.txt")
+            print("3. testSolvable3.txt")
+            print("4. testUnsolvable1.txt")
+            print("5. testUnsolvable2.txt")
+            testInput = int(input("Masukkan pilihan file (1-5): "))
+
         if (testInput == 1):
             fileName = "testSolvable1.txt"
         elif (testInput == 2):
@@ -142,15 +160,14 @@ if __name__ == "__main__":
         # Read File to Matrix
         readFiletoMatrix(fileName, matrix)
 
-        print()
-        print("File input: " + str(fileName))
+        print("\nFile input: " + str(fileName))
     elif (method == 2):
         randomToMatrix(matrix)
 
-        print()
-        print("Menggunakan matriks random")
+        print("\nMenggunakan matriks random")
     else:
-        print("Pastikan file terdapat pada folder test!")
+        print("\nPastikan file terdapat pada folder test!")
+        print("Pastikan pula space kosong ditandai dengan bilangan 16!")
         fileName = input("Masukkan nama file (+ extensionnya): ")
         
         fileName = "./test/" + fileName
@@ -158,12 +175,10 @@ if __name__ == "__main__":
         # Read File to Matrix
         readFiletoMatrix(fileName, matrix)
 
-        print()
-        print("File input: " + str(fileName))
+        print("\nFile input: " + str(fileName))
 
-    print()
     # Spek Luaran #1: Cetak matriks input (posisi awal)
-    print("Matriks posisi awal 15-puzzle:")
+    print("\nMatriks posisi awal 15-puzzle:")
     matrix.printMatrix()
 
     # Pemrosesan Branch & Bound
@@ -173,9 +188,7 @@ if __name__ == "__main__":
     nodeCount, stopTime = solve(matrix) 
 
     # Spek Luaran #6: Cetak waktu eksekusi
-    print("Total waktu yang diperlukan: {0:.2f} detik".format(stopTime - startTime))
-    print()
+    print("Total waktu yang diperlukan: {0:.2f} detik\n".format(stopTime - startTime))
 
     # Spek Luaran #7: Cetak jumlah simpul yang dibangkitkan
-    print("Jumlah simpul yang dibangkitkan (termasuk posisi awal): " + str(nodeCount))
-    print()
+    print("Jumlah simpul yang dibangkitkan (termasuk posisi awal): " + str(nodeCount) + "\n")
