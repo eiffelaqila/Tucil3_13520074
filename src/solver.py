@@ -82,15 +82,19 @@ def isSolution(matrix):
     return (costG(matrix) == 0)
 
 # PRINT PATH
-def printPath(matrix):
+def printPath(matrix,solution):
 
     # Mencetak rute pergerakan matrix
     if (matrix.getPreviousMatrix() != None):
-        printPath(matrix.getPreviousMatrix())
+        printPath(matrix.getPreviousMatrix(),solution)
     matrix.printMatrix()
+    solution.append(matrix)
 
 # ALGORITMA UTAMA SOLVER BRANCH AND BOUND
 def solve(matrix):
+    # list solusi
+    solution = []
+
     # Pemeriksaan apakah persoalan dapat diselesaikan atau tidak
     # Spek Luaran #2: Cetak nilai fungsi Kurang(i)
     costRoot = totalKurang(matrix) + statusX(matrix)
@@ -101,12 +105,14 @@ def solve(matrix):
 
     # Spek Luaran #4: Jika persoalan tidak dapat diselesaikan, keluar pesan
     if (costRoot % 2 == 1):
+        solution.append(matrix)
+
         # Stop time
         stopTime = time.time()
 
         print("Status tujuan permainan tidak dapat dicapai.\n")
 
-        return 1, stopTime
+        return 1, stopTime, solution, False
     
     # Pembuatan heap sebagai priority queue (antrian)
     print("Memproses persoalan...")
@@ -133,9 +139,9 @@ def solve(matrix):
 
             # Spek Luaran #5: Menampilkan urutan matriks dari awal ke akhir
             print("\nUrutan Matrix dari Posisi Awal ke Goal State:\n")
-            printPath(minMatrix)
+            printPath(minMatrix,solution)
             
-            return nodeCount, stopTime
+            return nodeCount, stopTime, solution, True
         
         # Jika belum ditemukan, bangkitkan semua anak-anaknya
         else:
