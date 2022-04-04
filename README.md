@@ -15,6 +15,7 @@ Berikut ini adalah struktur folder dari project ini:
 
 ## Requirement Program
 - [Python (versi yang digunakan dalam pembuatan program ini: 3.9.8)](https://www.python.org/downloads/)
+- Catatan: Di dalam program ini digunakan beberapa library yang merupakan bawaan dari instalasi Python
 
 ## Prosedur Penggunaan
 1. Untuk clone repository, jalankan
@@ -26,6 +27,8 @@ git clone https://github.com/eiffelaqila/Tucil3_13520074
 ```
 python src/main.py
 ```
+4. Program kemudian akan menampilkan output ke dalam terminal dan sebuah laman tkinter sebagai visualizer
+5. Pada laman tkinter, tekan tombol 'Play' untuk melihat visualisasi
 
 ## Author
 Program ini dikembangkan dalam rangka memenuhi salah satu tugas kecil mata kuliah Strategi Algoritma. Program ini dikembangkan oleh
